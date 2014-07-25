@@ -23,7 +23,7 @@ class FaceScraper(object):
         self.username = str(huid)
         self.pw = str(pw)
 
-    def get_jsessionid(self):
+    def login(self):
         self.jar = {}
         login_page = requests.get(LOGIN_URL)
         lt = re.findall(r'<input type="hidden" name="lt" value="([\w\-]+)',
@@ -46,23 +46,18 @@ class FaceScraper(object):
             last = requests.get(last.headers['location'], cookies=self.jar,
                     allow_redirects=False)
         del self.jar['CASTGC']
-        return self.jar['JSESSIONID']
 
     def scrape_students(self, filters=None):
-        self.get_jsessionid()
+        self.login()
         payload = {'name_last': '', 'name_first': '', 'house': '',
                 'assigned_house': '', 'year': '', 'concentration': '',
                 'num': '9999', 'Search': 'Search', 'view': 'photo'}
         payload.update(filters)
-        last = requests.get(INDEX_URL, params=payload, cookies=self.jar,
+        index = requests.get(INDEX_URL, params=payload, cookies=self.jar,
                             allow_redirects=False)
-        while last.status_code == 302:
-            self.jar.update(last.cookies)
-            last = requests.get(last.headers['location'], cookies=self.jar,
-                                allow_redirects=False)
         ids = re.findall(
                 r'<div class="photo">\n<a href="individual\?id=([a-f0-9]+)',
-                last.text)
+                index.text)
         return map(self.get_student, ids)
         
     def get_student(self, sid):
