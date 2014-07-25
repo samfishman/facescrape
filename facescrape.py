@@ -52,7 +52,8 @@ class FaceScraper(object):
         payload = {'name_last': '', 'name_first': '', 'house': '',
                 'assigned_house': '', 'year': '', 'concentration': '',
                 'num': '9999', 'Search': 'Search', 'view': 'photo'}
-        payload.update(filters)
+        if filters:
+            payload.update(filters)
         index = requests.get(INDEX_URL, params=payload, cookies=self.jar,
                             allow_redirects=False)
         ids = re.findall(
