@@ -69,13 +69,14 @@ class FaceScraper(object):
         
     def get_student(self, sid):
         r = requests.get(INDIVIDUAL_URL % sid, cookies=self.jar)
+        body = r.text.replace('<br>', '')
         data = {}
 
         for key in ('Name', 'House', 'Year', 'Concentration', 'Assigned House',
                     'Dorm Address', 'Mail Address'):
             match = re.search(
                     r'<span class="field">%s:</span><span class="value">'
-                    r'([\w\-\' ]+)<' % key, r.text)
+                    r'([\w\-\', ]+)<' % key, body)
             if match:
                 data[key.lower()] = match.group(1)
             else:
@@ -83,7 +84,7 @@ class FaceScraper(object):
 
         for key, pat in [('email', r'mailto:([\w\-\.]+@college\.harvard\.edu)'),
                 ('photo', r'<img alt="Image" width="250" src="([\w/\-\.]+)"')]:
-            match = re.search(pat, r.text)
+            match = re.search(pat, body)
             if match:
                 data[key] = match.group(1)
             else:
