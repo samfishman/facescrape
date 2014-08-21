@@ -62,7 +62,9 @@ class FaceScraper(object):
         ids = re.findall(
                 r'<div class="photo">\n<a href="individual\?id=([a-f0-9]+)',
                 index.text)
-        return map(self.get_student, ids)
+        ans = map(self.get_student, ids)
+        self.last_read = ans
+        return ans
         
     def get_student(self, sid):
         r = requests.get(INDIVIDUAL_URL % sid, cookies=self.jar)
