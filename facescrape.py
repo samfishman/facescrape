@@ -11,6 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import csv
 import re
 import requests
 
@@ -91,4 +92,17 @@ class FaceScraper(object):
         data['photo'] = 'http://facebook.college.harvard.edu/%s' % data['photo']
 
         return data
+
+    def export_csv(self, path, columns=None):
+        if columns == None:
+            columns = ('Name', 'House', 'Year', 'Concentration',
+                       'Assigned House', 'Dorm Address', 'Mail Address',
+                       'Email', 'Photo')
+        with open(path, 'w') as f:
+            exporter = csv.writer(f)
+            exporter.writerow(columns)
+            rows = map(lambda p: [p[c.lower()] if c.lower() in p else ''
+                                  for c in columns],
+                       self.last_read)
+            exporter.writerows(rows)
 
