@@ -68,7 +68,8 @@ class FaceScraper(object):
         r = requests.get(INDIVIDUAL_URL % sid, cookies=self.jar)
         data = {}
 
-        for key in ('Name', 'House', 'Year', 'Concentration', 'Assigned House'):
+        for key in ('Name', 'House', 'Year', 'Concentration', 'Assigned House',
+                    'Dorm Address', 'Mail Address'):
             match = re.search(
                     r'<span class="field">%s:</span><span class="value">'
                     r'([\w\-\' ]+)<' % key, r.text)
