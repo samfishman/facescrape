@@ -45,7 +45,10 @@ class FaceScraper(object):
             self.jar.update(last.cookies)
             last = requests.get(last.headers['location'], cookies=self.jar,
                     allow_redirects=False)
-        del self.jar['CASTGC']
+        try:
+            del self.jar['CASTGC']
+        except KeyError:
+            raise Exception('Login Failed!')
 
     def scrape_students(self, filters=None):
         self.login()
