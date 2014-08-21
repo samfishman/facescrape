@@ -11,6 +11,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+Facescrape is a tool for scraping the Harvard College Facebook.
+
+Usage:
+>>> fs = FaceScraper(my_huid, my_pw)
+>>> data = fs.scrape_students({'house': 'Kirkland House'})
+>>> fs.export_csv('/path/to/export.csv')
+"""
+
 import csv
 import re
 import requests
